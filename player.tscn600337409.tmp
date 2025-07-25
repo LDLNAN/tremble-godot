@@ -1,0 +1,160 @@
+[gd_scene load_steps=18 format=3 uid="uid://cw8w6clmxedi6"]
+
+[ext_resource type="Script" uid="uid://7g0275t5jw14" path="res://player.gd" id="1_hwwnj"]
+[ext_resource type="Script" uid="uid://mmj75gsq7ift" path="res://player_manager.gd" id="2_1jxqw"]
+[ext_resource type="Script" uid="uid://on2gvsqp3xv6" path="res://player_input.gd" id="2_ju3m6"]
+[ext_resource type="Script" uid="uid://dmgqpt7q41gm0" path="res://player_health.gd" id="3_dw050"]
+[ext_resource type="Script" uid="uid://dksonr0x87157" path="res://player_weapons.gd" id="4_b26j0"]
+[ext_resource type="Script" uid="uid://dl7al7veedd8d" path="res://weapon_config.gd" id="5_b26j0"]
+[ext_resource type="Script" uid="uid://b45ykqavxc8sh" path="res://gamemode_config.gd" id="6_n7ghd"]
+[ext_resource type="Script" uid="uid://80gpr0pih4b0" path="res://beam_gun.gd" id="7_n7ghd"]
+[ext_resource type="Script" uid="uid://bumcwqm14frpf" path="res://addons/LineRenderer/line_renderer.gd" id="10_n7ghd"]
+
+[sub_resource type="Resource" id="Resource_nvl01"]
+script = ExtResource("6_n7ghd")
+metadata/_custom_type_script = "uid://b45ykqavxc8sh"
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_fb1vy"]
+properties/0/path = NodePath(".:player")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("SpringArm3D/CameraPivot/Camera3D/WeaponHolder/BeamGun:damage_per_tick")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("SpringArm3D/CameraPivot/Camera3D/WeaponHolder/BeamGun:damage_tick_rate")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("SpringArm3D/CameraPivot/Camera3D/WeaponHolder/BeamGun:beam_range")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hoavk"]
+properties/0/path = NodePath(".:direction")
+properties/0/spawn = false
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:yaw_rotation")
+properties/1/spawn = false
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:pitch_rotation")
+properties/2/spawn = false
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:jumping")
+properties/3/spawn = false
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:shoot_input")
+properties/4/spawn = false
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:is_firing")
+properties/5/spawn = false
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:beam_start_point")
+properties/6/spawn = false
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:beam_end_point")
+properties/7/spawn = false
+properties/7/replication_mode = 1
+properties/8/path = NodePath(".:target_path")
+properties/8/spawn = false
+properties/8/replication_mode = 1
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b26j0"]
+radius = 0.35
+height = 1.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_b26j0"]
+radius = 0.35
+height = 1.5
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_n7ghd"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nvl01"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.5
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_onrkg"]
+height = 0.001
+radius = 0.1
+
+[node name="Player" type="CharacterBody3D" groups=["Player"]]
+floor_stop_on_slope = false
+script = ExtResource("1_hwwnj")
+normalization_distance = 1.2000000000000002
+air_time_threshold = 0.01
+close_ground_threshold = 0.05
+min_step_speed = 1.5000000000000002
+step_speed_multiplier = 0.0
+
+[node name="PlayerManager" type="Node" parent="."]
+script = ExtResource("2_1jxqw")
+
+[node name="PlayerHealth" type="Node" parent="PlayerManager"]
+script = ExtResource("3_dw050")
+
+[node name="PlayerWeapons" type="Node" parent="PlayerManager"]
+script = ExtResource("4_b26j0")
+gamemode_config = SubResource("Resource_nvl01")
+
+[node name="ServerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_fb1vy")
+
+[node name="PlayerInput" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath(".")
+replication_config = SubResource("SceneReplicationConfig_hoavk")
+script = ExtResource("2_ju3m6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Player"]]
+shape = SubResource("CapsuleShape3D_b26j0")
+debug_color = Color(0, 0.6, 0.69803923, 0.6666667)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_b26j0")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+spring_length = 0.0
+margin = 0.0
+
+[node name="CameraPivot" type="Node3D" parent="SpringArm3D"]
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D/CameraPivot"]
+keep_aspect = 0
+fov = 120.0
+near = 0.001
+
+[node name="WeaponHolder" type="Node3D" parent="SpringArm3D/CameraPivot/Camera3D"]
+
+[node name="BeamGun" type="Node3D" parent="SpringArm3D/CameraPivot/Camera3D/WeaponHolder"]
+script = ExtResource("7_n7ghd")
+damage_tick_rate = 0.1999999999970896
+damage_per_tick = 7.0
+
+[node name="LineRenderer3D" type="MeshInstance3D" parent="SpringArm3D/CameraPivot/Camera3D/WeaponHolder/BeamGun"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+visible = false
+mesh = SubResource("ImmediateMesh_n7ghd")
+skeleton = NodePath("../../../../../..")
+script = ExtResource("10_n7ghd")
+start_thickness = 0.03399999999965075
+end_thickness = 0.03399999999965075
+metadata/_custom_type_script = "uid://bumcwqm14frpf"
+
+[node name="Model" type="MeshInstance3D" parent="SpringArm3D/CameraPivot/Camera3D/WeaponHolder/BeamGun"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.375, -0.25, -0.25)
+mesh = SubResource("CylinderMesh_nvl01")
+
+[node name="Marker3D" type="Marker3D" parent="SpringArm3D/CameraPivot/Camera3D/WeaponHolder/BeamGun/Model"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.002408743, 0.24568802, 0.005099468)
+
+[node name="WeaponEffects" type="Node3D" parent="SpringArm3D/CameraPivot/Camera3D"]
+
+[node name="GroundCheck" type="ShapeCast3D" parent="."]
+shape = SubResource("CylinderShape3D_onrkg")
+target_position = Vector3(0, -1.5, 0)
+debug_shape_custom_color = Color(0, 0, 1, 1)

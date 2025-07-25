@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="GamemodeConfig" load_steps=3 format=3 uid="uid://bqxvn8yqxqxqx"]
+
+[ext_resource type="Script" path="res://gamemode_config.gd" id="1_0x0x0"]
+[ext_resource type="Resource" uid="uid://c8xvn8yqxqxqx" path="res://resources/beam_gun_config.tres" id="2_0x0x0"]
+
+[resource]
+script = ExtResource("1_0x0x0")
+gamemode_name = "Default"
+max_players = 16
+time_limit = 600.0
+score_limit = 50
+available_weapons = Array[Resource]("res://weapon_config.gd", [ExtResource("2_0x0x0")])
+starting_weapons = PackedStringArray("beam_gun")
+weapon_pickups_enabled = true
+respawn_weapons = PackedStringArray("beam_gun")
+friendly_fire = false
+self_damage = true
+weapon_drop_on_death = false 

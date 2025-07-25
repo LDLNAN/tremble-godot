@@ -1,0 +1,98 @@
+[gd_scene load_steps=13 format=3 uid="uid://cw8w6clmxedi6"]
+
+[ext_resource type="Script" uid="uid://7g0275t5jw14" path="res://player.gd" id="1_hwwnj"]
+[ext_resource type="Script" uid="uid://mmj75gsq7ift" path="res://player_manager.gd" id="2_1jxqw"]
+[ext_resource type="Script" uid="uid://on2gvsqp3xv6" path="res://player_input.gd" id="2_ju3m6"]
+[ext_resource type="Script" uid="uid://dmgqpt7q41gm0" path="res://player_health.gd" id="3_dw050"]
+[ext_resource type="Material" uid="uid://due1qpgfoidud" path="res://standard_shaders/green.tres" id="3_i3pqv"]
+[ext_resource type="Script" uid="uid://dksonr0x87157" path="res://player_weapons.gd" id="4_b26j0"]
+[ext_resource type="Script" uid="uid://80gpr0pih4b0" path="res://beam_gun.gd" id="7_n7ghd"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_fb1vy"]
+properties/0/path = NodePath(".:player")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hoavk"]
+properties/0/path = NodePath(".:direction")
+properties/0/spawn = false
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:yaw_rotation")
+properties/1/spawn = false
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:pitch_rotation")
+properties/2/spawn = false
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:jumping")
+properties/3/spawn = false
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:shoot_input")
+properties/4/spawn = false
+properties/4/replication_mode = 1
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_37qaq"]
+radius = 0.35
+height = 1.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_jab13"]
+material = ExtResource("3_i3pqv")
+radius = 0.35
+height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_onrkg"]
+height = 0.1
+radius = 0.345
+
+[node name="Player" type="CharacterBody3D"]
+motion_mode = 1
+script = ExtResource("1_hwwnj")
+
+[node name="PlayerManager" type="Node" parent="."]
+script = ExtResource("2_1jxqw")
+
+[node name="PlayerHealth" type="Node" parent="PlayerManager"]
+script = ExtResource("3_dw050")
+
+[node name="PlayerWeapons" type="Node" parent="PlayerManager"]
+script = ExtResource("4_b26j0")
+
+[node name="ServerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_fb1vy")
+
+[node name="PlayerInput" type="MultiplayerSynchronizer" parent="."]
+root_path = NodePath(".")
+replication_config = SubResource("SceneReplicationConfig_hoavk")
+script = ExtResource("2_ju3m6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_37qaq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_jab13")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+spring_length = 0.0
+
+[node name="CameraPivot" type="Node3D" parent="SpringArm3D"]
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D/CameraPivot"]
+
+[node name="WeaponHolder" type="Node3D" parent="SpringArm3D/CameraPivot/Camera3D"]
+
+[node name="BeamGun" type="Node3D" parent="SpringArm3D/CameraPivot/Camera3D/WeaponHolder"]
+script = ExtResource("7_n7ghd")
+
+[node name="WeaponEffects" type="Node3D" parent="SpringArm3D/CameraPivot/Camera3D"]
+
+[node name="GroundCheck" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("CylinderShape3D_onrkg")
+target_position = Vector3(0, -0.7, 0)
+debug_shape_custom_color = Color(0, 0, 1, 1)

@@ -1,0 +1,31 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://csb23hnxtw5yk"]
+
+[ext_resource type="Texture2D" uid="uid://bxt4vhwuqtlbu" path="res://textures/Effect and Bullet 16x16/fire1.png" id="1_0l8nv"]
+[ext_resource type="Texture2D" uid="uid://cs3tgeq5rk2y0" path="res://textures/Effect and Bullet 16x16/fire2.png" id="2_r6crj"]
+[ext_resource type="Texture2D" uid="uid://bfhtbx7lcrv6l" path="res://textures/Effect and Bullet 16x16/fire3.png" id="3_4hgj3"]
+[ext_resource type="Texture2D" uid="uid://bercgm4f6qsxc" path="res://textures/Effect and Bullet 16x16/fire4.png" id="4_w1wr2"]
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_30mte"]
+frames = 4
+speed_scale = 16.8
+frame_0/texture = ExtResource("1_0l8nv")
+frame_1/texture = ExtResource("2_r6crj")
+frame_1/duration = 1.0
+frame_2/texture = ExtResource("3_4hgj3")
+frame_2/duration = 1.0
+frame_3/texture = ExtResource("4_w1wr2")
+frame_3/duration = 1.0
+
+[resource]
+transparency = 1
+shading_mode = 0
+disable_ambient_light = true
+disable_fog = true
+disable_specular_occlusion = true
+albedo_color = Color(0.9168673, 0.49873406, 0.71999556, 1)
+albedo_texture = SubResource("AnimatedTexture_30mte")
+albedo_texture_force_srgb = true
+texture_filter = 0
+disable_receive_shadows = true
+distance_fade_max_distance = 15.0
+stencil_flags = 2
