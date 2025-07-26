@@ -11,8 +11,14 @@ config_version=5
 [application]
 
 config/name="tremble"
-run/main_scene="res://multiplayer.tscn"
+run/main_scene="res://scenes/ui/game_root.tscn"
 config/features=PackedStringArray("4.5")
+
+[autoload]
+
+# Temporarily disabled for debugging
+# UIManager="*res://scripts/ui/ui_manager.gd"
+# GameManager="*res://scripts/game_manager.gd"
 
 [editor]
 

@@ -1,0 +1,656 @@
+[gd_scene load_steps=6 format=3 uid="uid://b8q5uqn7ehynj"]
+
+[ext_resource type="Script" path="res://scripts/ui/game_root_minimal.gd" id="1_minimal"]
+[ext_resource type="Script" path="res://scripts/ui/main_menu_safe.gd" id="2_main_safe"]
+[ext_resource type="Script" path="res://scripts/ui/lobby_screen_safe.gd" id="3_lobby_safe"]
+[ext_resource type="Theme" uid="uid://bqx8yqn7ehynj" path="res://resources/ui_theme.tres" id="4_theme"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_1"]
+font_size = 72
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2"]
+font_size = 48
+font_color = Color(1, 1, 1, 1)
+
+[node name="GameRoot" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_minimal")
+
+[node name="MainMenu" type="Control" parent="."]
+visible = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("4_theme")
+script = ExtResource("2_main_safe")
+
+[node name="Background" type="ColorRect" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="TitleLabel" type="Label" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 150.0
+text = "TREMBLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+label_settings = SubResource("LabelSettings_1")
+
+[node name="TabPanel" type="VBoxContainer" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -150.0
+offset_right = 100.0
+offset_bottom = 150.0
+
+[node name="PlayTab" type="Button" parent="MainMenu/TabPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play"
+
+[node name="OptionsTab" type="Button" parent="MainMenu/TabPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Options"
+
+[node name="LeaderboardTab" type="Button" parent="MainMenu/TabPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Leaderboard"
+
+[node name="ExitTab" type="Button" parent="MainMenu/TabPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Exit"
+
+[node name="PlayChoiceMenu" type="Control" parent="MainMenu"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect" parent="MainMenu/PlayChoiceMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="TitleLabel" type="Label" parent="MainMenu/PlayChoiceMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 150.0
+text = "Choose Game Mode"
+horizontal_alignment = 1
+vertical_alignment = 1
+label_settings = SubResource("LabelSettings_1")
+
+[node name="MenuContainer" type="HBoxContainer" parent="MainMenu/PlayChoiceMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -150.0
+offset_right = 400.0
+offset_bottom = 150.0
+
+[node name="SinglePlayerCard" type="VBoxContainer" parent="MainMenu/PlayChoiceMenu/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SinglePlayerLabel" type="Label" parent="MainMenu/PlayChoiceMenu/MenuContainer/SinglePlayerCard"]
+layout_mode = 2
+text = "Single Player"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="SinglePlayerButton" type="Button" parent="MainMenu/PlayChoiceMenu/MenuContainer/SinglePlayerCard"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play Solo"
+
+[node name="MultiplayerCard" type="VBoxContainer" parent="MainMenu/PlayChoiceMenu/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MultiplayerLabel" type="Label" parent="MainMenu/PlayChoiceMenu/MenuContainer/MultiplayerCard"]
+layout_mode = 2
+text = "Multiplayer"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="MultiplayerButton" type="Button" parent="MainMenu/PlayChoiceMenu/MenuContainer/MultiplayerCard"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Play Online"
+
+[node name="BackButton" type="Button" parent="MainMenu/PlayChoiceMenu"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Back"
+
+[node name="SinglePlayerMenu" type="Control" parent="MainMenu"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect" parent="MainMenu/SinglePlayerMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="TitleLabel" type="Label" parent="MainMenu/SinglePlayerMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 150.0
+text = "Single Player"
+horizontal_alignment = 1
+vertical_alignment = 1
+label_settings = SubResource("LabelSettings_1")
+
+[node name="MenuContainer" type="HBoxContainer" parent="MainMenu/SinglePlayerMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -150.0
+offset_right = 400.0
+offset_bottom = 150.0
+
+[node name="QuickPlayCard" type="VBoxContainer" parent="MainMenu/SinglePlayerMenu/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="QuickPlayLabel" type="Label" parent="MainMenu/SinglePlayerMenu/MenuContainer/QuickPlayCard"]
+layout_mode = 2
+text = "Quick Play"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="QuickPlayButton" type="Button" parent="MainMenu/SinglePlayerMenu/MenuContainer/QuickPlayCard"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start Game"
+
+[node name="CustomGameCard" type="VBoxContainer" parent="MainMenu/SinglePlayerMenu/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CustomGameLabel" type="Label" parent="MainMenu/SinglePlayerMenu/MenuContainer/CustomGameCard"]
+layout_mode = 2
+text = "Custom Game"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="CustomGameButton" type="Button" parent="MainMenu/SinglePlayerMenu/MenuContainer/CustomGameCard"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Configure"
+
+[node name="BackButton" type="Button" parent="MainMenu/SinglePlayerMenu"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Back"
+
+[node name="MultiplayerMenu" type="Control" parent="MainMenu"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect" parent="MainMenu/MultiplayerMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="TitleLabel" type="Label" parent="MainMenu/MultiplayerMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 150.0
+text = "Multiplayer"
+horizontal_alignment = 1
+vertical_alignment = 1
+label_settings = SubResource("LabelSettings_1")
+
+[node name="MenuContainer" type="HBoxContainer" parent="MainMenu/MultiplayerMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = -150.0
+offset_right = 600.0
+offset_bottom = 150.0
+
+[node name="JoinGameCard" type="VBoxContainer" parent="MainMenu/MultiplayerMenu/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="JoinGameLabel" type="Label" parent="MainMenu/MultiplayerMenu/MenuContainer/JoinGameCard"]
+layout_mode = 2
+text = "Join Game"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="JoinGameButton" type="Button" parent="MainMenu/MultiplayerMenu/MenuContainer/JoinGameCard"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Connect"
+
+[node name="CreateLobbyCard" type="VBoxContainer" parent="MainMenu/MultiplayerMenu/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CreateLobbyLabel" type="Label" parent="MainMenu/MultiplayerMenu/MenuContainer/CreateLobbyCard"]
+layout_mode = 2
+text = "Create Lobby"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="CreateLobbyButton" type="Button" parent="MainMenu/MultiplayerMenu/MenuContainer/CreateLobbyCard"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Host"
+
+[node name="LobbyBrowserCard" type="VBoxContainer" parent="MainMenu/MultiplayerMenu/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LobbyBrowserLabel" type="Label" parent="MainMenu/MultiplayerMenu/MenuContainer/LobbyBrowserCard"]
+layout_mode = 2
+text = "Lobby Browser"
+horizontal_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="LobbyBrowserButton" type="Button" parent="MainMenu/MultiplayerMenu/MenuContainer/LobbyBrowserCard"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Browse"
+
+[node name="BackButton" type="Button" parent="MainMenu/MultiplayerMenu"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Back"
+
+[node name="UniversalOptionsMenu" type="Control" parent="MainMenu"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Background" type="ColorRect" parent="MainMenu/UniversalOptionsMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="TitleLabel" type="Label" parent="MainMenu/UniversalOptionsMenu"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 150.0
+text = "Options"
+horizontal_alignment = 1
+vertical_alignment = 1
+label_settings = SubResource("LabelSettings_1")
+
+[node name="OptionsContainer" type="VBoxContainer" parent="MainMenu/UniversalOptionsMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 200.0
+offset_bottom = -100.0
+
+[node name="TabBar" type="HBoxContainer" parent="MainMenu/UniversalOptionsMenu/OptionsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AudioTab" type="Button" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/TabBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio"
+
+[node name="VideoTab" type="Button" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/TabBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Video"
+
+[node name="ControlsTab" type="Button" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/TabBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Controls"
+
+[node name="GameplayTab" type="Button" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/TabBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Gameplay"
+
+[node name="ContentArea" type="Control" parent="MainMenu/UniversalOptionsMenu/OptionsContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AudioContent" type="VBoxContainer" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea"]
+visible = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MasterVolumeLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+text = "Master Volume"
+horizontal_alignment = 1
+
+[node name="MasterVolumeSlider" type="HSlider" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+value = 50.0
+
+[node name="MusicVolumeLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+text = "Music Volume"
+horizontal_alignment = 1
+
+[node name="MusicVolumeSlider" type="HSlider" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+value = 50.0
+
+[node name="SFXVolumeLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+text = "SFX Volume"
+horizontal_alignment = 1
+
+[node name="SFXVolumeSlider" type="HSlider" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+value = 50.0
+
+[node name="VoiceVolumeLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+text = "Voice Volume"
+horizontal_alignment = 1
+
+[node name="VoiceVolumeSlider" type="HSlider" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/AudioContent"]
+layout_mode = 2
+value = 50.0
+
+[node name="VideoContent" type="VBoxContainer" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ResolutionLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "Resolution"
+horizontal_alignment = 1
+
+[node name="ResolutionOption" type="OptionButton" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "1920x1080"
+
+[node name="FullscreenLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "Fullscreen"
+horizontal_alignment = 1
+
+[node name="FullscreenCheckBox" type="CheckBox" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "Enable Fullscreen"
+
+[node name="VSyncLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "VSync"
+horizontal_alignment = 1
+
+[node name="VSyncCheckBox" type="CheckBox" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "Enable VSync"
+
+[node name="GraphicsQualityLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "Graphics Quality"
+horizontal_alignment = 1
+
+[node name="GraphicsQualityOption" type="OptionButton" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/VideoContent"]
+layout_mode = 2
+text = "High"
+
+[node name="ControlsContent" type="VBoxContainer" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MouseSensitivityLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/ControlsContent"]
+layout_mode = 2
+text = "Mouse Sensitivity"
+horizontal_alignment = 1
+
+[node name="MouseSensitivitySlider" type="HSlider" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/ControlsContent"]
+layout_mode = 2
+value = 50.0
+
+[node name="InvertMouseLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/ControlsContent"]
+layout_mode = 2
+text = "Invert Mouse"
+horizontal_alignment = 1
+
+[node name="InvertMouseCheckBox" type="CheckBox" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/ControlsContent"]
+layout_mode = 2
+text = "Invert Y-Axis"
+
+[node name="RawInputLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/ControlsContent"]
+layout_mode = 2
+text = "Raw Input"
+horizontal_alignment = 1
+
+[node name="RawInputCheckBox" type="CheckBox" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/ControlsContent"]
+layout_mode = 2
+text = "Enable Raw Input"
+
+[node name="GameplayContent" type="VBoxContainer" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="FOVLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/GameplayContent"]
+layout_mode = 2
+text = "Field of View"
+horizontal_alignment = 1
+
+[node name="FOVSlider" type="HSlider" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/GameplayContent"]
+layout_mode = 2
+value = 90.0
+min_value = 60.0
+max_value = 120.0
+
+[node name="CrosshairLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/GameplayContent"]
+layout_mode = 2
+text = "Crosshair"
+horizontal_alignment = 1
+
+[node name="CrosshairOption" type="OptionButton" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/GameplayContent"]
+layout_mode = 2
+text = "Default"
+
+[node name="HUDLabel" type="Label" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/GameplayContent"]
+layout_mode = 2
+text = "HUD"
+horizontal_alignment = 1
+
+[node name="HUDCheckBox" type="CheckBox" parent="MainMenu/UniversalOptionsMenu/OptionsContainer/ContentArea/GameplayContent"]
+layout_mode = 2
+text = "Show HUD"
+
+[node name="BackButton" type="Button" parent="MainMenu/UniversalOptionsMenu"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Back"
+
+[node name="VersionLabel" type="Label" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -30.0
+offset_right = -20.0
+offset_bottom = -10.0
+text = "v0.1.0"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="LobbyScreen" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("4_theme")
+script = ExtResource("3_lobby_safe")
+
+[node name="Background" type="ColorRect" parent="LobbyScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 1)
+
+[node name="TitleLabel" type="Label" parent="LobbyScreen"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 100.0
+text = "Multiplayer"
+horizontal_alignment = 1
+vertical_alignment = 1
+label_settings = SubResource("LabelSettings_2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+
+[node name="HostButton" type="Button" parent="LobbyScreen/VBoxContainer"]
+layout_mode = 2
+text = "Host Game"
+
+[node name="JoinButton" type="Button" parent="LobbyScreen/VBoxContainer"]
+layout_mode = 2
+text = "Join Game"
+
+[node name="ServerAddressLabel" type="Label" parent="LobbyScreen/VBoxContainer"]
+layout_mode = 2
+text = "Server Address:"
+
+[node name="ServerAddressInput" type="LineEdit" parent="LobbyScreen/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "127.0.0.1"
+
+[node name="BackButton" type="Button" parent="LobbyScreen/VBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[node name="StatusLabel" type="Label" parent="LobbyScreen"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = -50.0
+text = "Ready to host or join"
+horizontal_alignment = 1
+vertical_alignment = 1

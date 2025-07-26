@@ -2,6 +2,10 @@ extends Node
 
 const PORT = 4433
 
+# Lobby setup variables
+var is_hosting_from_lobby = false
+var server_address_from_lobby = ""
+
 func _ready():
 	# Start paused
 	get_tree().paused = true
@@ -13,6 +17,24 @@ func _ready():
 		print("Automatically starting dedicated server")
 		_on_host_pressed.call_deferred()
 
+# Setup method called from lobby screen
+func setup_from_lobby(is_hosting: bool, server_address: String = ""):
+	print("Multiplayer: Setup from lobby - Hosting: ", is_hosting, " Address: ", server_address)
+	is_hosting_from_lobby = is_hosting
+	server_address_from_lobby = server_address
+	
+	# Set the server address in the UI if joining
+	if not is_hosting and server_address != "":
+		var remote_input = get_node_or_null("UI/Net/Options/Remote")
+		if remote_input:
+			remote_input.text = server_address
+			print("Multiplayer: Set server address to: ", server_address)
+	
+	# Automatically start hosting or connecting
+	if is_hosting:
+		_on_host_pressed.call_deferred()
+	else:
+		_on_connect_pressed.call_deferred()
 
 func _on_host_pressed():
 	# Start as server
@@ -23,7 +45,6 @@ func _on_host_pressed():
 		return
 	multiplayer.multiplayer_peer = peer
 	start_game()
-
 
 func _on_connect_pressed():
 	# Start as client
