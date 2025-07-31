@@ -1,16 +1,24 @@
 extends CharacterBody3D
 
 # Movement configuration (matching Rust MovementConfig)
-const SPEED = 7.0  # Maximum player speed (matches Rust default)
-const JUMP_VELOCITY = 5.0  # Upward velocity applied when jumping (matches Rust default)
-const STEP_HEIGHT = 0.55  # Maximum step height (matches Rust MAX_STEP_HEIGHT)
-const GROUND_CHECK_OFFSET = 0.01  # Small offset for ground snapping
+@export_group("Movement")
+@export_range(1.0, 20.0, 0.5) var speed: float = 7.0  # Maximum player speed (matches Rust default)
+@export_range(1.0, 15.0, 0.5) var jump_velocity: float = 5.0  # Upward velocity applied when jumping (matches Rust default)
+@export_range(0.1, 2.0, 0.05) var step_height: float = 0.55  # Maximum step height (matches Rust MAX_STEP_HEIGHT)
+@export_range(0.001, 0.1, 0.001) var ground_check_offset: float = 0.01  # Small offset for ground snapping
 
 # Quake-like movement parameters (matching Rust defaults)
-const GROUND_ACCELERATE = 10.0  # Acceleration when on ground (units/sec^2)
-const AIR_ACCELERATE = 1.0  # Acceleration when in air (units/sec^2)
+@export_range(1.0, 50.0, 1.0) var ground_accelerate: float = 10.0  # Acceleration when on ground (units/sec^2)
+@export_range(0.1, 10.0, 0.1) var air_accelerate: float = 1.0  # Acceleration when in air (units/sec^2)
+@export_range(1.0, 50.0, 0.5) var gravity: float = 9.8  # Gravity strength (units/sec^2) - overrides project setting
+@export_range(0.1, 20.0, 0.5) var friction: float = 6.0  # Friction applied when on ground (units/sec^2)
 
-const FRICTION = 6.0  # Friction applied when on ground
+# Tremblecharacter-style air control settings
+@export_group("Air Control")
+@export_range(0.1, 2.0, 0.1) var strafe_max_speed: float = 0.7  # Maximum speed for strafe-only movement
+@export_range(10.0, 100.0, 1.0) var strafe_acceleration: float = 60.0  # Acceleration for strafe-only movement
+@export_range(10.0, 100.0, 1.0) var strafe_deceleration: float = 60.0  # Deceleration for strafe-only movement
+@export_range(0.0, 1.0, 0.1) var air_control_strength: float = 0.3  # Air control strength (0.0 = no air control, 1.0 = full air control)
 
 # Movement input handling
 @export var use_analog_input: bool = false  # Enable analog input support (gamepad) vs digital (WASD)
@@ -33,8 +41,8 @@ const MIN_STEP_SPEED = 1.0  # Minimum speed for step climbing (matches Rust min_
 @export_range(0.001, 0.1, 0.001) var close_ground_threshold: float = 0.01  # Threshold for "close enough to ground"
 
 @export_group("Step Climbing")
-@export_range(0.5, 3.0, 0.1) var step_climb_speed: float = 1.5  # Speed for climbing steps
-@export_range(0.1, 2.0, 0.1) var min_step_speed: float = 1.0  # Minimum step climbing speed
+@export_range(0.5, 5.0, 0.1) var step_climb_speed: float = 1.5  # Speed for climbing steps
+@export_range(0.1, 5.0, 0.1) var min_step_speed: float = 1.0  # Minimum step climbing speed
 @export_range(0.00, 0.5, 0.01) var step_speed_multiplier: float = 0.3  # Multiplier for step speed calculation (matches Rust default)
 
 @export_group("Debug")
@@ -48,8 +56,8 @@ var capsule_height: float = 2.0
 var ground_cast_radius: float = 0.0
 var ground_cast_half_height: float = 0.01
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+# Gravity is now configurable via the Movement group in the inspector
+# This overrides the project's default gravity setting
 
 # Set by the authority, synchronized on spawn.
 @export var player := 1 :
@@ -122,7 +130,7 @@ func _physics_process(delta):
 
 	# Handle Jump (matching Rust implementation exactly)
 	if input.jumping and is_grounded_custom:  # No timer check - allows bunny hopping!
-		velocity.y = JUMP_VELOCITY
+		velocity.y = jump_velocity
 		just_jumped_timer = 0.0  # Reset jump timer (matching Rust logic)
 		is_grounded_custom = false  # Immediately become ungrounded when jumping
 		# Note: Don't reset input.jumping here - let the input system handle it for network sync
@@ -252,7 +260,7 @@ func get_ground_cast_dimensions():
 	pass
 
 
-# Perform Quake-like movement (matching Rust implementation)
+# Perform Quake-like movement (matching Rust implementation with tremblecharacter air control)
 func perform_quake_movement(delta: float):
 	# Calculate wish direction and speed (matching Rust logic)
 	var wish_vel = Vector3(input.direction.x, 0, input.direction.y).normalized()  # Fixed: removed negative sign
@@ -262,13 +270,14 @@ func perform_quake_movement(delta: float):
 	# Fix diagonal movement speed - handle digital vs analog input
 	var input_magnitude = input.direction.length()
 	var wish_speed: float
+	var accel: float
 	
 	if use_analog_input:
 		# Analog input (gamepad) - speed varies with input magnitude
-		wish_speed = min(input_magnitude * SPEED, SPEED)
+		wish_speed = min(input_magnitude * speed, speed)
 	else:
 		# Digital input (WASD) - consistent speed in all directions
-		wish_speed = SPEED
+		wish_speed = speed
 	
 	# Sticky wish_dir logic (matching Rust)
 	if wish_dir.length_squared() > 0.001:
@@ -282,10 +291,30 @@ func perform_quake_movement(delta: float):
 	# Apply friction and acceleration based on grounded state
 	if is_grounded_custom:
 		apply_friction(delta)
-		accelerate(wish_dir, wish_speed, GROUND_ACCELERATE, delta)
+		accelerate(wish_dir, wish_speed, ground_accelerate, delta)
 	else:
-		# Air movement (matching Rust implementation exactly)
-		accelerate(wish_dir, wish_speed, AIR_ACCELERATE, delta)
+		# Air movement with tremblecharacter-style air control
+		var wish_dir_normalized = wish_dir.normalized()
+		var wish_speed_original = wish_speed
+		
+		# Check if we're moving forward/backward or strafing
+		var is_strafe_only = input.direction.x != 0.0 and input.direction.y == 0.0
+		
+		if is_strafe_only:
+			# Strafe-only movement (left/right only) - use tremblecharacter settings
+			if wish_speed > strafe_max_speed:
+				wish_speed = strafe_max_speed
+			accel = strafe_acceleration
+		else:
+			# Forward/backward movement - use normal air acceleration
+			accel = air_accelerate
+		
+		# Apply acceleration
+		accelerate(wish_dir_normalized, wish_speed, accel, delta)
+		
+		# Apply tremblecharacter air control if enabled
+		if air_control_strength > 0.0:
+			air_control(wish_dir_normalized, wish_speed_original, delta)
 
 
 # Apply friction to velocity when grounded (matching Rust implementation)
@@ -294,7 +323,7 @@ func apply_friction(delta: float):
 	if speed <= 0.0:
 		return
 	
-	var drop = speed * FRICTION * delta
+	var drop = speed * friction * delta
 	var new_speed = max(speed - drop, 0.0)
 	
 	if speed > 0.0:
@@ -316,6 +345,35 @@ func accelerate(wish_dir: Vector3, wish_speed: float, accel: float, delta: float
 	
 	velocity.x += accel_speed * wish_dir.x
 	velocity.z += accel_speed * wish_dir.z
+
+
+# Tremblecharacter-style air control function
+func air_control(target_dir: Vector3, target_speed: float, delta: float):
+	# Only apply air control when moving forward/backward (not strafing)
+	if input.direction.y == 0.0:
+		return
+	
+	var dot: float
+	var speed: float
+	var original_y: float
+	
+	original_y = velocity.y
+	velocity.y = 0.0
+	speed = velocity.length()
+	velocity = velocity.normalized()
+	
+	# Change direction while slowing down
+	dot = velocity.dot(target_dir)
+	if dot > 0.0:
+		var k = 32.0 * air_control_strength * dot * dot * delta
+		velocity.x = velocity.x * speed + target_dir.x * k
+		velocity.y = velocity.y * speed + target_dir.y * k
+		velocity.z = velocity.z * speed + target_dir.z * k
+		velocity = velocity.normalized()
+	
+	velocity.x *= speed
+	velocity.y = original_y
+	velocity.z *= speed
 
 
 
@@ -347,7 +405,7 @@ func position_ground_check():
 			print("Using editor-set ShapeCast3D target: ", ground_check.target_position)
 		else:
 			# Use script-controlled positioning (legacy mode)
-			ground_check.position = Vector3(0, GROUND_CHECK_OFFSET, 0)
+			ground_check.position = Vector3(0, ground_check_offset, 0)
 			ground_check.target_position = Vector3(0, -normalization_distance * 2.0, 0)
 		
 		# Update the ground check shape with configurable dimensions

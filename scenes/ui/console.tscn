@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3 uid="uid://bt52ij10gqvvt"]
+
+[ext_resource type="Script" uid="uid://daqs6h21a00h2" path="res://scripts/ui/console.gd" id="1_console"]
+[ext_resource type="Theme" uid="uid://bqx8yqn7ehynj" path="res://resources/ui_theme.tres" id="2_theme"]
+
+[node name="Console" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_console")
+
+[node name="ConsolePanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ConsolePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ConsoleOutput" type="RichTextLabel" parent="ConsolePanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "Console ready. Type 'help' for available commands.
+"
+scroll_following = true
+shortcut_keys_enabled = false
+
+[node name="ConsoleInput" type="LineEdit" parent="ConsolePanel/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter command..."
+context_menu_enabled = false
+shortcut_keys_enabled = false
+caret_blink = true
+caret_blink_interval = 0.5

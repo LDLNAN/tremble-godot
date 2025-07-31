@@ -13,7 +13,6 @@ var version_label: Label
 # Sub-menus (full screen)
 var play_choice_menu: Control
 var single_player_menu: Control
-var multiplayer_menu: Control
 var universal_options_menu: Control
 
 # Play choice menu buttons
@@ -25,12 +24,6 @@ var play_choice_back_button: Button
 var quick_play_button: Button
 var custom_game_button: Button
 var single_player_back_button: Button
-
-# Multiplayer menu buttons
-var join_game_button: Button
-var create_lobby_button: Button
-var lobby_browser_button: Button
-var multiplayer_back_button: Button
 
 # Universal options menu controls
 var audio_tab: Button
@@ -97,6 +90,9 @@ func _ready():
 	else:
 		print("WARNING: MainMenu Safe title_label not found")
 	
+	# Show main menu with proper mouse_filter settings
+	show_main_menu()
+	
 	# Grab focus for keyboard navigation
 	if play_tab:
 		play_tab.grab_focus()
@@ -116,24 +112,17 @@ func find_ui_references():
 	# Find sub-menus
 	play_choice_menu = get_node_or_null("PlayChoiceMenu")
 	single_player_menu = get_node_or_null("SinglePlayerMenu")
-	multiplayer_menu = get_node_or_null("MultiplayerMenu")
 	universal_options_menu = get_node_or_null("UniversalOptionsMenu")
 	
 	# Find play choice menu buttons
-	single_player_choice_button = get_node_or_null("PlayChoiceMenu/MenuContainer/SinglePlayerCard/SinglePlayerButton")
-	multiplayer_choice_button = get_node_or_null("PlayChoiceMenu/MenuContainer/MultiplayerCard/MultiplayerButton")
+	single_player_choice_button = get_node_or_null("PlayChoiceMenu/MenuContainer/ButtonContainer/SinglePlayerButton")
+	multiplayer_choice_button = get_node_or_null("PlayChoiceMenu/MenuContainer/ButtonContainer/MultiplayerButton")
 	play_choice_back_button = get_node_or_null("PlayChoiceMenu/BackButton")
 	
 	# Find single player menu buttons
-	quick_play_button = get_node_or_null("SinglePlayerMenu/MenuContainer/QuickPlayCard/QuickPlayButton")
-	custom_game_button = get_node_or_null("SinglePlayerMenu/MenuContainer/CustomGameCard/CustomGameButton")
+	quick_play_button = get_node_or_null("SinglePlayerMenu/MenuContainer/ButtonContainer/QuickPlayButton")
+	custom_game_button = get_node_or_null("SinglePlayerMenu/MenuContainer/ButtonContainer/CustomGameButton")
 	single_player_back_button = get_node_or_null("SinglePlayerMenu/BackButton")
-	
-	# Find multiplayer menu buttons
-	join_game_button = get_node_or_null("MultiplayerMenu/MenuContainer/JoinGameCard/JoinGameButton")
-	create_lobby_button = get_node_or_null("MultiplayerMenu/MenuContainer/CreateLobbyCard/CreateLobbyButton")
-	lobby_browser_button = get_node_or_null("MultiplayerMenu/MenuContainer/LobbyBrowserCard/LobbyBrowserButton")
-	multiplayer_back_button = get_node_or_null("MultiplayerMenu/BackButton")
 	
 	# Find universal options menu controls
 	audio_tab = get_node_or_null("UniversalOptionsMenu/OptionsContainer/TabBar/AudioTab")
@@ -235,23 +224,6 @@ func setup_connections():
 		single_player_back_button.pressed.connect(_on_back_to_play_choice)
 		print("MainMenu Safe: Single player back button connected")
 	
-	# Connect multiplayer menu buttons
-	if join_game_button:
-		join_game_button.pressed.connect(_on_join_game_pressed)
-		print("MainMenu Safe: Join game button connected")
-	
-	if create_lobby_button:
-		create_lobby_button.pressed.connect(_on_create_lobby_pressed)
-		print("MainMenu Safe: Create lobby button connected")
-	
-	if lobby_browser_button:
-		lobby_browser_button.pressed.connect(_on_lobby_browser_pressed)
-		print("MainMenu Safe: Lobby browser button connected")
-	
-	if multiplayer_back_button:
-		multiplayer_back_button.pressed.connect(_on_back_to_play_choice)
-		print("MainMenu Safe: Multiplayer back button connected")
-	
 	# Connect universal options menu controls
 	if audio_tab:
 		audio_tab.pressed.connect(_on_audio_tab_pressed)
@@ -283,8 +255,6 @@ func show_submenu(submenu_name: String):
 		play_choice_menu.visible = false
 	if single_player_menu:
 		single_player_menu.visible = false
-	if multiplayer_menu:
-		multiplayer_menu.visible = false
 	if universal_options_menu:
 		universal_options_menu.visible = false
 	
@@ -298,10 +268,6 @@ func show_submenu(submenu_name: String):
 			if single_player_menu:
 				single_player_menu.visible = true
 				print("MainMenu Safe: Showing single player menu")
-		"multiplayer":
-			if multiplayer_menu:
-				multiplayer_menu.visible = true
-				print("MainMenu Safe: Showing multiplayer menu")
 		"options":
 			if universal_options_menu:
 				universal_options_menu.visible = true
@@ -348,44 +314,136 @@ func hide_all_submenus():
 		play_choice_menu.visible = false
 	if single_player_menu:
 		single_player_menu.visible = false
-	if multiplayer_menu:
-		multiplayer_menu.visible = false
 	if universal_options_menu:
 		universal_options_menu.visible = false
 
+func show_main_menu():
+	print("MainMenu Safe: Showing main menu")
+	
+	# Hide all sub-menus
+	if play_choice_menu:
+		play_choice_menu.visible = false
+		play_choice_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if single_player_menu:
+		single_player_menu.visible = false
+		single_player_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if universal_options_menu:
+		universal_options_menu.visible = false
+		universal_options_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Show main tab panel
+	var tab_panel = get_node_or_null("TabPanel")
+	if tab_panel:
+		tab_panel.visible = true
+		print("MainMenu Safe: Main menu shown")
+	else:
+		print("ERROR: MainMenu Safe TabPanel not found")
+
 # Main tab button handlers
 func _on_play_tab_pressed():
-	print("Play tab pressed")
-	show_submenu("play_choice")
-	if single_player_choice_button:
-		single_player_choice_button.grab_focus()
+	print("MainMenu Safe: Play tab pressed")
+	show_play_choice_menu()
 
 func _on_options_tab_pressed():
-	print("Options tab pressed")
-	show_submenu("options")
-	if audio_tab:
-		audio_tab.grab_focus()
+	print("MainMenu Safe: Options tab pressed")
+	show_universal_options_menu()
 
 func _on_leaderboard_tab_pressed():
-	print("Leaderboard tab pressed")
-	OS.alert("Leaderboard coming soon!", "Feature Not Available")
+	print("MainMenu Safe: Leaderboard tab pressed")
+	# TODO: Implement leaderboard
 
 func _on_exit_tab_pressed():
-	print("Exit tab pressed")
+	print("MainMenu Safe: Exit tab pressed")
 	get_tree().quit()
+
+# Sub-menu show functions
+func show_play_choice_menu():
+	print("MainMenu Safe: Showing play choice menu")
+	
+	# Hide main tab panel
+	var tab_panel = get_node_or_null("TabPanel")
+	if tab_panel:
+		tab_panel.visible = false
+	
+	# Hide other sub-menus
+	if single_player_menu:
+		single_player_menu.visible = false
+		single_player_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if universal_options_menu:
+		universal_options_menu.visible = false
+		universal_options_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Show play choice menu
+	if play_choice_menu:
+		play_choice_menu.visible = true
+		play_choice_menu.mouse_filter = Control.MOUSE_FILTER_STOP
+		print("MainMenu Safe: Play choice menu shown")
+	else:
+		print("ERROR: MainMenu Safe play_choice_menu not found")
+
+func show_single_player_menu():
+	print("MainMenu Safe: Showing single player menu")
+	
+	# Hide main tab panel
+	var tab_panel = get_node_or_null("TabPanel")
+	if tab_panel:
+		tab_panel.visible = false
+	
+	# Hide other sub-menus
+	if play_choice_menu:
+		play_choice_menu.visible = false
+		play_choice_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if universal_options_menu:
+		universal_options_menu.visible = false
+		universal_options_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Show single player menu
+	if single_player_menu:
+		single_player_menu.visible = true
+		single_player_menu.mouse_filter = Control.MOUSE_FILTER_STOP
+		print("MainMenu Safe: Single player menu shown")
+	else:
+		print("ERROR: MainMenu Safe single_player_menu not found")
+
+func show_universal_options_menu():
+	print("MainMenu Safe: Showing universal options menu")
+	
+	# Hide main tab panel
+	var tab_panel = get_node_or_null("TabPanel")
+	if tab_panel:
+		tab_panel.visible = false
+	
+	# Hide other sub-menus
+	if play_choice_menu:
+		play_choice_menu.visible = false
+		play_choice_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if single_player_menu:
+		single_player_menu.visible = false
+		single_player_menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	
+	# Show universal options menu
+	if universal_options_menu:
+		universal_options_menu.visible = true
+		universal_options_menu.mouse_filter = Control.MOUSE_FILTER_STOP
+		print("MainMenu Safe: Universal options menu shown")
+	else:
+		print("ERROR: MainMenu Safe universal_options_menu not found")
 
 # Play choice menu button handlers
 func _on_single_player_choice_pressed():
 	print("Single player choice button pressed")
-	show_submenu("single_player")
+	show_single_player_menu()
 	if quick_play_button:
 		quick_play_button.grab_focus()
 
 func _on_multiplayer_choice_pressed():
 	print("Multiplayer choice button pressed")
-	show_submenu("multiplayer")
-	if join_game_button:
-		join_game_button.grab_focus()
+	# Go directly to lobby screen
+	var game_root = get_parent()
+	if game_root and game_root.has_method("show_lobby_screen"):
+		game_root.show_lobby_screen()
+	else:
+		print("ERROR: GameRoot show_lobby_screen method not found")
 
 # Single player menu button handlers
 func _on_quick_play_pressed():
@@ -395,29 +453,6 @@ func _on_quick_play_pressed():
 func _on_custom_game_pressed():
 	print("Custom game button pressed")
 	OS.alert("Custom game coming soon!", "Feature Not Available")
-
-# Multiplayer menu button handlers
-func _on_join_game_pressed():
-	print("Join game button pressed")
-	# Transition to lobby screen for joining
-	var game_root = get_parent()
-	if game_root and game_root.has_method("show_lobby_screen"):
-		game_root.show_lobby_screen()
-	else:
-		print("ERROR: GameRoot show_lobby_screen method not found")
-
-func _on_create_lobby_pressed():
-	print("Create lobby button pressed")
-	# Transition to lobby screen for hosting
-	var game_root = get_parent()
-	if game_root and game_root.has_method("show_lobby_screen"):
-		game_root.show_lobby_screen()
-	else:
-		print("ERROR: GameRoot show_lobby_screen method not found")
-
-func _on_lobby_browser_pressed():
-	print("Lobby browser button pressed")
-	OS.alert("Lobby browser coming soon!", "Feature Not Available")
 
 # Universal options tab handlers
 func _on_audio_tab_pressed():
@@ -438,16 +473,22 @@ func _on_gameplay_tab_pressed():
 
 # Back button handlers
 func _on_back_to_main():
-	print("Back button pressed")
-	hide_all_submenus()
+	print("MainMenu Safe: Back to main pressed")
+	show_main_menu()
 	if play_tab:
 		play_tab.grab_focus()
 
 func _on_back_to_play_choice():
-	print("Back to play choice pressed")
-	show_submenu("play_choice")
+	print("MainMenu Safe: Back to play choice pressed")
+	show_play_choice_menu()
 	if single_player_choice_button:
 		single_player_choice_button.grab_focus()
+
+func _on_back_to_single_player():
+	print("MainMenu Safe: Back to single player pressed")
+	show_single_player_menu()
+	if quick_play_button:
+		quick_play_button.grab_focus()
 
 # Input handling for keyboard navigation
 func _input(event):

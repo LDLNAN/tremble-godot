@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://douighe3go3nh"]
+
+[ext_resource type="PackedScene" uid="uid://c42aqncbgaf3i" path="res://6plus.bsp" id="1_hdl12"]
+
+[node name="6plus" instance=ExtResource("1_hdl12")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56.453613, 0, 0)

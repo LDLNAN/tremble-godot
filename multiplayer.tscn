@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bvnwjpd0f3oa0"]
+[gd_scene load_steps=3 format=3 uid="uid://bvnwjpd0f3oa0"]
 
 [ext_resource type="Script" uid="uid://ca1uep71puapd" path="res://multiplayer.gd" id="1_jiv4u"]
+[ext_resource type="PackedScene" uid="uid://bej0vo1iej2y6" path="res://scenes/ui/pause_menu.tscn" id="2_pause_menu"]
 
 [node name="Multiplayer" type="Node"]
 script = ExtResource("1_jiv4u")
@@ -54,3 +55,6 @@ caret_blink_interval = 0.5
 
 [connection signal="pressed" from="UI/Net/Options/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="UI/Net/Options/Connect" to="." method="_on_connect_pressed"]
+
+[node name="PauseMenu" parent="." instance=ExtResource("2_pause_menu")]
+visible = false

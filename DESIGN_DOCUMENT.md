@@ -383,6 +383,18 @@
 - Ensures proper cleanup when switching between states
 - Maintains context when returning from sub-menus
 
+**Escape Key Navigation:**
+- **Main Menu**: Escape key has no action (already at root level)
+- **Sub-menus**: Escape key returns to previous menu or main menu
+- **Options Menu**: Escape key returns to previous menu (main menu or pause menu)
+- **Lobby Screen**: Escape key shows "Leave Lobby?" confirmation dialog
+- **Leaderboard**: Escape key returns to main menu
+- **Steam Matchmaking**: Escape key cancels search and returns to lobby/connect
+- **In-Game**: Escape key opens pause menu
+- **Pause Menu**: Escape key resumes game or returns to previous menu
+- **Match End Screen**: Escape key returns to main menu
+- **Confirmation Dialogs**: Escape key cancels the dialog and returns to previous state
+
 **Transition Animations:**
 - Smooth fade transitions between major screens
 - Slide animations for sub-menu navigation

@@ -99,6 +99,13 @@ func _on_back_pressed():
 	else:
 		print("ERROR: GameRoot show_main_menu method not found")
 
+# Input handling for keyboard navigation
+func _input(event):
+	if event.is_action_pressed("ui_cancel"):
+		# Handle escape key - go back to main menu
+		print("Escape key pressed in lobby screen")
+		_on_back_pressed()
+
 func start_multiplayer_game(is_hosting: bool, server_address: String = ""):
 	print("Starting multiplayer game...")
 	update_status("Loading multiplayer scene...")

@@ -94,7 +94,7 @@ func handle_client_prediction(delta):
 			
 			var target_info = find_target_and_collision_point(camera_pos, direction)
 			if target_info.target:
-				print("[BEAMGUN] Client predicting damage to: ", target_info.target.name)
+				# print("[BEAMGUN] Client predicting damage to: ", target_info.target.name)
 				# Set target path for server to validate
 				weapon_owner.input.target_path = target_info.target.get_path()
 
@@ -130,14 +130,17 @@ func apply_damage_from_synced_target():
 			
 			var result = space_state.intersect_ray(query)
 			if result and result.collider == target:
-				print("[BEAMGUN] Server validation passed, applying damage to: ", target.name)
+				# print("[BEAMGUN] Server validation passed, applying damage to: ", target.name)
 				apply_damage_to_target(target, damage_per_tick)
 			else:
-				print("[BEAMGUN] Server validation failed - target not in line of sight")
+				# print("[BEAMGUN] Server validation failed - target not in line of sight")
+				pass
 		else:
-			print("[BEAMGUN] Server validation failed - no camera")
+			# print("[BEAMGUN] Server validation failed - no camera")
+			pass
 	else:
-		print("[BEAMGUN] Server validation failed - invalid target")
+		# print("[BEAMGUN] Server validation failed - invalid target")
+		pass
 
 func perform_start_fire():
 	if is_firing:
@@ -262,24 +265,27 @@ func find_target_and_collision_point(from: Vector3, direction: Vector3) -> Dicti
 		var collider = result.collider
 		var collision_point = result.position
 		
-		print("[BEAMGUN] Raycast hit: ", collider.name, " Groups: ", collider.get_groups())
+		# print("[BEAMGUN] Raycast hit: ", collider.name, " Groups: ", collider.get_groups())
 		
 		# Always hit things in World or players layers
 		if collider.is_in_group("World") or collider.is_in_group("players"):
-			print("[BEAMGUN] Valid target found: ", collider.name)
+			# print("[BEAMGUN] Valid target found: ", collider.name)
 			
 			# Search for health component and apply damage (server only)
 			if multiplayer.is_server():
-				print("[BEAMGUN] Server applying damage to: ", collider.name)
+				# print("[BEAMGUN] Server applying damage to: ", collider.name)
 				apply_damage_to_target(collider, damage_per_tick)
 			else:
-				print("[BEAMGUN] Not server, skipping damage application")
+				# print("[BEAMGUN] Not server, skipping damage application")
+				pass
 			
 			return {"target": collider, "collision_point": collision_point}
 		else:
-			print("[BEAMGUN] Invalid target: ", collider.name, " - Not in World or players group")
+			# print("[BEAMGUN] Invalid target: ", collider.name, " - Not in World or players group")
+			pass
 	else:
-		print("[BEAMGUN] No raycast hit found")
+		# print("[BEAMGUN] No raycast hit found")
+		pass
 	
 	return {"target": null, "collision_point": null}
 
@@ -287,33 +293,34 @@ func apply_damage_to_target(target: Node, damage: float):
 	# Search for health component in the target or its children
 	var health_component = find_health_component(target)
 	if health_component:
-		print("[BEAMGUN] take_damage: target=", target.name, " health_component=", health_component.name, " amount=", damage, " source=", weapon_owner)
+		# print("[BEAMGUN] take_damage: target=", target.name, " health_component=", health_component.name, " amount=", damage, " source=", weapon_owner)
 		health_component.take_damage(damage, weapon_owner)
 		apply_vampirism(damage)
 	else:
-		print("[BEAMGUN] No health component found on: ", target.name)
+		# print("[BEAMGUN] No health component found on: ", target.name)
+		pass
 
 func find_health_component(node: Node) -> Health:
-	print("[BEAMGUN] Searching for Health component in: ", node.name, " Type: ", node.get_class())
+	# print("[BEAMGUN] Searching for Health component in: ", node.name, " Type: ", node.get_class())
 	
 	# Check if the node itself has a Health component
 	if node is Health:
-		print("[BEAMGUN] Found Health component directly on: ", node.name)
+		# print("[BEAMGUN] Found Health component directly on: ", node.name)
 		return node
 	
 	# Search children for Health component
 	for child in node.get_children():
-		print("[BEAMGUN] Checking child: ", child.name, " Type: ", child.get_class())
+		# print("[BEAMGUN] Checking child: ", child.name, " Type: ", child.get_class())
 		if child is Health:
-			print("[BEAMGUN] Found Health component on child: ", child.name)
+			# print("[BEAMGUN] Found Health component on child: ", child.name)
 			return child
 		# Recursively search deeper
 		var found = find_health_component(child)
 		if found:
-			print("[BEAMGUN] Found Health component in deeper child: ", found.name)
+			# print("[BEAMGUN] Found Health component in deeper child: ", found.name)
 			return found
 	
-	print("[BEAMGUN] No Health component found in: ", node.name)
+	# print("[BEAMGUN] No Health component found in: ", node.name)
 	return null
 
 func spawn_beam_effect(from: Vector3, to: Vector3):

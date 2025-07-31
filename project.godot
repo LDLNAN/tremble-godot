@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="tremble"
-run/main_scene="res://scenes/ui/game_root.tscn"
+run/main_scene="res://scenes/ui/main_menu_standalone.tscn"
 config/features=PackedStringArray("4.5")
 
 [autoload]
 
-# Temporarily disabled for debugging
-# UIManager="*res://scripts/ui/ui_manager.gd"
-# GameManager="*res://scripts/game_manager.gd"
+InputHandler="*res://scenes/autoload/input_handler.tscn"
+#Temporarilydisabledfordebugging#UIManager="*res://scripts/ui/ui_manager.gd"
+#GameManager="*res://scripts/game_manager.gd"
 
 [editor]
 
@@ -27,7 +27,7 @@ version_control/autoload_on_startup=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/LineRenderer/plugin.cfg", "res://addons/so_fluffy/plugin.cfg", "res://addons/stairs/plugin.cfg")
+enabled=PackedStringArray("res://addons/LineRenderer/plugin.cfg", "res://addons/tech3bsp/plugin.cfg")
 
 [global_group]
 
@@ -64,6 +64,16 @@ shoot={
 jump={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"location":0,"echo":false,"script":null)
+]
+}
+toggle_console={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":96,"key_label":0,"unicode":126,"location":0,"echo":false,"script":null)
+]
+}
+crouch={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":67,"key_label":0,"unicode":99,"location":0,"echo":false,"script":null)
 ]
 }
 
